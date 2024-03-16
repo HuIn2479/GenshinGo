@@ -23,7 +23,7 @@ public class Genshin extends JFrame {
 
         if (option == JOptionPane.OK_OPTION) {
 
-            try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File("./app/go.wav"))) {
+            try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File("app/go.wav"))) {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioStream);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -64,7 +64,7 @@ public class Genshin extends JFrame {
     }
 
     private void loadImage() {
-        backgroundImage = new ImageIcon("./app/go.gif").getImage();
+        backgroundImage = new ImageIcon("app/go.gif").getImage();
         repaint();
     }
 
