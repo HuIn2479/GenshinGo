@@ -1,18 +1,25 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Genshin",
-            "request": "launch",
-            "mainClass": "Genshin",
-            "projectName": "Java_7f073bd5"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Genshin",
+      "request": "launch",
+      "mainClass": "Genshin",
+      "projectName": "GenShinGo_7c8a1658"
+    },
+    {
+      "type": "java",
+      "name": "Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "Genshin",
+      "request": "launch",
+      "mainClass": "Genshin",
+      "projectName": "Java_7f073bd5"
+    }
+  ]
 }
