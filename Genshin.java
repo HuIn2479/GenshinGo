@@ -16,7 +16,7 @@ public class Genshin extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(Genshin.class.getName());
 
     public Genshin() {
-        setTitle("什么？！你也玩元神！");
+        setTitle("什么？！你也玩原神！");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         int option = JOptionPane.showConfirmDialog(this, "确定要继续吗？", "温馨提示", JOptionPane.OK_CANCEL_OPTION);
@@ -71,10 +71,15 @@ public class Genshin extends JFrame {
     private void openOtherApp() {
         try {
             String applicationPath = "D:\\Program Files\\Genshin Impact\\launcher.exe";
-            LOGGER.log(Level.INFO, "因为“权限”问题，会导致不能打开运行 Todo");
-            ProcessBuilder pb = new ProcessBuilder(applicationPath);
-            pb.start();
-            appOpened = true;
+            File file = new File(applicationPath);
+            if (file.exists()) {
+                LOGGER.log(Level.INFO, "因为“权限”问题，会导致不能打开运行 Todo");
+                ProcessBuilder pb = new ProcessBuilder(applicationPath);
+                pb.start();
+                appOpened = true;
+            } else {
+                LOGGER.log(Level.WARNING, "OOPS!你还没有原神");
+            }
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Error opening other application", ex);
         }
