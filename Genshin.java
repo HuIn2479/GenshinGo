@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -13,7 +11,11 @@ import javax.sound.sampled.Clip;
 public class Genshin extends JFrame {
     private Image backgroundImage;
     private boolean appOpened = false;
-    private static final Logger LOGGER = Logger.getLogger(Genshin.class.getName());
+
+    private static final String APP_PATH = "D:\\Program Files\\Genshin Impact\\launcher.exe";
+    private static final String AUDIO_PATH = "app/go.wav";
+    private static final String IMAGE_PATH = "app/go.gif";
+    private static final String WEBSITE_URL = "https://ys.mihoyo.com";
 
     public Genshin() {
         setTitle("什么？！你也玩原神！");
@@ -22,32 +24,11 @@ public class Genshin extends JFrame {
         int option = JOptionPane.showConfirmDialog(this, "确定要继续吗？", "温馨提示", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
-
-            try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File("app/go.wav"))) {
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioStream);
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-            } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, "Error loading audio file", ex);
-            }
-
-            loadImage();
+            loadResources();
 
             Timer timer = new Timer(5500, e -> {
                 openOtherApp();
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(5900);
-                        if (!appOpened) {
-                            openWebsite();
-                            Timer closeTimer = new Timer(5000, e1 -> System.exit(0));
-                            closeTimer.setRepeats(false);
-                            closeTimer.start();
-                        }
-                    } catch (InterruptedException ex) {
-                        LOGGER.log(Level.SEVERE, "Thread interrupted", ex);
-                    }
-                }).start();
+                new Thread(this::openWebsiteAfterDelay).start();
             });
             timer.setRepeats(false);
             timer.start();
@@ -63,33 +44,48 @@ public class Genshin extends JFrame {
         SwingUtilities.invokeLater(Genshin::new);
     }
 
-    private void loadImage() {
-        backgroundImage = new ImageIcon("app/go.gif").getImage();
-        repaint();
+    private void loadResources() {
+        try {
+            // Load audio
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(AUDIO_PATH));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            // Load image
+            backgroundImage = new ImageIcon(IMAGE_PATH).getImage();
+            repaint();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void openOtherApp() {
         try {
-            String applicationPath = "D:\\Program Files\\Genshin Impact\\launcher.exe";
-            File file = new File(applicationPath);
+            File file = new File(APP_PATH);
             if (file.exists()) {
-                LOGGER.log(Level.INFO, "因为“权限”问题，会导致不能打开运行 Todo");
-                ProcessBuilder pb = new ProcessBuilder(applicationPath);
+                System.out.println("因为“权限”问题，会导致不能打开运行 Todo");
+                ProcessBuilder pb = new ProcessBuilder(APP_PATH);
                 pb.start();
                 appOpened = true;
             } else {
-                LOGGER.log(Level.WARNING, "OOPS!你还没有原神");
+                System.out.println("OOPS!You haven't GenSHin");
             }
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Error opening other application", ex);
+            ex.printStackTrace();
         }
     }
 
-    private void openWebsite() {
+    private void openWebsiteAfterDelay() {
         try {
-            Desktop.getDesktop().browse(new URI("https://ys.mihoyo.com"));
-        } catch (IOException | URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, "Error opening website", e);
+            Thread.sleep(5900);
+            if (!appOpened) {
+                Desktop.getDesktop().browse(new URI(WEBSITE_URL));
+                Timer closeTimer = new Timer(5000, e -> System.exit(0));
+                closeTimer.setRepeats(false);
+                closeTimer.start();
+            }
+        } catch (InterruptedException | URISyntaxException | IOException ex) {
+            ex.printStackTrace();
         }
     }
 
