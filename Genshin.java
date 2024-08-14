@@ -24,7 +24,7 @@ public class Genshin extends JFrame {
             loadResources();
 
             Timer timer = new Timer(5500, e -> {
-                openOtherApp();
+                openGenshin();
                 new Thread(this::openWebsiteAfterDelay).start();
             });
             timer.setRepeats(false);
@@ -56,7 +56,7 @@ public class Genshin extends JFrame {
         }
     }
 
-    private void openOtherApp() {
+    private void openGenshin() {
         try {
             File file = new File(APP_PATH);
             if (file.exists()) {
